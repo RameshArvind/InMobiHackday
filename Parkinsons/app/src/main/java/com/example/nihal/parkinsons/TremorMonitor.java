@@ -69,7 +69,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     
 	Time now = new Time();
     now.setToNow();
-    String sTime = now.format("%Y_%m_%d_%H_%M_%S");
+    String sTime = now.format("%d-%m-%Y-%H-%M-%S");
     timeStamp = sTime;
 		String reqParam = id+";"+timeStamp+";"+values;
         try{
@@ -96,11 +96,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
             Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
-            if(isCallActive(getApplicationContext())){
-                Log.d("Call State", "Call Active");
-            }
-            else
-                Log.d("Call State", "Call Inactive");
+
         }
 
 
@@ -111,10 +107,5 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
 
     }
 
-    public static boolean isCallActive(Context context){
-        AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
-        if(manager.getMode()==AudioManager.MODE_IN_CALL)
-            return true;
-        return false;
-    }
+
 }

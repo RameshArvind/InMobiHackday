@@ -1,9 +1,12 @@
 package com.example.nihal.parkinsons;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,12 +15,32 @@ import android.view.View;
 
 public class MainActivity extends ActionBarActivity {
 
-
+    boolean serviceSwitch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    if(!serviceSwitch && checkCallState()){
+                        serviceSwitch = true;
+                        Log.d("Call State", "Call Active");
+                        startService(new Intent(getApplicationContext(), TremorMonitor.class));
+                    }
+                    else if(serviceSwitch && !checkCallState()) {
+                        serviceSwitch = false;
+                        Log.d("Call State", "Call Inactive");
+                        stopService(new Intent(getApplicationContext(), TremorMonitor.class));
+                    }
+                }
+            }
+        });
+
+        thread.start();
     }
 
 
@@ -41,6 +64,28 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public boolean checkCallState(){
+        if(isCallActive(getApplicationContext())) {
+//            Log.d("Call State", "Call Active");
+            return true;
+        }
+        else {
+//            Log.d("Call State", "Call Inactive");
+            return false;
+        }
+    }
+
+
+
+
+
+    public static boolean isCallActive(Context context){
+        AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(manager.getMode()==AudioManager.MODE_IN_CALL)
+            return true;
+        return false;
     }
 
     public void startService(View view) {
