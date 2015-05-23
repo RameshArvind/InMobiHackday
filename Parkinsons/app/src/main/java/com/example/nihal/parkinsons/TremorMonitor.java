@@ -53,7 +53,16 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
     }
-
+    void  abhinavAPI(String id, String values){
+    String timeStamp= "";
+    
+	Time now = new Time();
+    now.setToNow();
+    String sTime = now.format("%Y_%m_%d_%H_%M_%S");
+    timeStamp = sTime;
+		String reqParam = id+";"+timeStamp+";"+values;    
+		new RequestTask().execute("http://10.14.121.236:3000/insert/"+reqParam);    
+    }
     @Override
     public void onRebind(Intent intent) {
         super.onRebind(intent);
