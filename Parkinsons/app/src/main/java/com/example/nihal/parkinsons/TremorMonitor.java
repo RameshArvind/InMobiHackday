@@ -1,6 +1,8 @@
 package com.example.nihal.parkinsons;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -8,7 +10,10 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.text.format.Time;
 import android.util.Log;
+
+import java.util.List;
 
 public class TremorMonitor extends Service  implements SensorEventListener2 {
 
@@ -35,6 +40,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
+        //abhinavAPI("7", "10, 11, 12, 13");
     }
 
     @Override
@@ -80,7 +86,12 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
-            Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
+            //Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
+
+            ActivityManager am = (ActivityManager) this .getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            Log.d("Activity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName()+"   Package Name :  "+componentInfo.getPackageName());
         }
     }
 
