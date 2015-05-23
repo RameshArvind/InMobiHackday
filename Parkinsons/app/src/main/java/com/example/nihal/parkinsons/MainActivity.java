@@ -44,12 +44,12 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void startService(View view) {
-        startService(new Intent(getBaseContext(), TremorMonitor.class));
+        startService(new Intent(this, TremorMonitor.class));
     }
 
     // Method to stop the service
     public void stopService(View view) {
-        stopService(new Intent(getBaseContext(), TremorMonitor.class));
+        stopService(new Intent(this, TremorMonitor.class));
     }
 
 }

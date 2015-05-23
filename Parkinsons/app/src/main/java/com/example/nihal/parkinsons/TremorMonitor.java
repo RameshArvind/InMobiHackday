@@ -9,6 +9,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.IBinder;
 import android.text.format.Time;
 import android.util.Log;
@@ -53,6 +54,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        senSensorManager.unregisterListener(this);
     }
 
     @Override
@@ -87,16 +89,25 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
             //Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
-
-            ActivityManager am = (ActivityManager) this .getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
-            ComponentName componentInfo = taskInfo.get(0).topActivity;
-            Log.d("Activity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName()+"   Package Name :  "+componentInfo.getPackageName());
+            if(isCallActive(getApplicationContext())){
+                Log.d("Call State", "Call Active");
+            }
+            else
+                Log.d("Call State", "Call Inactive");
         }
+
+
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    public static boolean isCallActive(Context context){
+        AudioManager manager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+        if(manager.getMode()==AudioManager.MODE_IN_CALL)
+            return true;
+        return false;
     }
 }
