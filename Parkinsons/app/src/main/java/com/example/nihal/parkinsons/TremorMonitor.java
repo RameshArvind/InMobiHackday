@@ -23,8 +23,10 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     private Sensor senAccelerometer;
     private long lastUpdate = 0;
     private float last_x, last_y, last_z;
-    private static final int SHAKE_THRESHOLD = 600;
+    private static final int SHAKE_THRESHOLD = 10;
 
+    double startTime;
+    double tremorCount = 0;
 
     public TremorMonitor() {
     }
@@ -48,16 +50,20 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i("LocalService", "Received start id " + startId + ": " + intent);
-
+        startTime = 0;
+        tremorCount = 0;
+        startTime = System.currentTimeMillis();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        startTime = System.currentTimeMillis() - startTime;
 
-        abhinavAPI("7", "10,11,12,13");
+        //abhinavAPI("7", "10,11,12,13");
         senSensorManager.unregisterListener(this);
+        Log.d("Average Frequency", ""+calcFrequency());
     }
 
     @Override
@@ -91,15 +97,36 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         Sensor mySensor = sensorEvent.sensor;
+
         if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
-            Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
+
+
+            long curTime = System.currentTimeMillis();
+
+            if ((curTime - lastUpdate) > 100) {
+                long diffTime = (curTime - lastUpdate);
+                lastUpdate = curTime;
+                float speed = Math.abs(x + y + z - last_x - last_y - last_z)/ diffTime * 10000;
+
+                if (speed > SHAKE_THRESHOLD) {
+                    Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
+                    tremorCount++;
+                }
+
+                last_x = x;
+                last_y = y;
+                last_z = z;
+            }
 
         }
 
+    }
 
+    double calcFrequency(){
+        return (tremorCount/startTime)*1000;
     }
 
     @Override
