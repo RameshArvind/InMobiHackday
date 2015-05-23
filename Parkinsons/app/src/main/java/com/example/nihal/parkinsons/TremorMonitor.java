@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.text.format.Time;
 import android.util.Log;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 public class TremorMonitor extends Service  implements SensorEventListener2 {
@@ -41,7 +42,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
         senSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer , SensorManager.SENSOR_DELAY_NORMAL);
-        //abhinavAPI("7", "10, 11, 12, 13");
+
     }
 
     @Override
@@ -54,6 +55,8 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     @Override
     public void onDestroy() {
         super.onDestroy();
+
+        abhinavAPI("7", "10,11,12,13");
         senSensorManager.unregisterListener(this);
     }
 
@@ -68,7 +71,11 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     now.setToNow();
     String sTime = now.format("%Y_%m_%d_%H_%M_%S");
     timeStamp = sTime;
-		String reqParam = id+";"+timeStamp+";"+values;    
+		String reqParam = id+";"+timeStamp+";"+values;
+        try{
+            reqParam = URLEncoder.encode(reqParam, "utf-8");
+        }catch(Exception e){}
+
 		new RequestTask().execute("http://10.14.121.236:3000/insert/"+reqParam);    
     }
     @Override
@@ -88,7 +95,7 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
             float x = sensorEvent.values[0];
             float y = sensorEvent.values[1];
             float z = sensorEvent.values[2];
-            //Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
+            Log.d("Sensor", "X: "+x+"  Y:  "+y+"  Z :"+z);
             if(isCallActive(getApplicationContext())){
                 Log.d("Call State", "Call Active");
             }
