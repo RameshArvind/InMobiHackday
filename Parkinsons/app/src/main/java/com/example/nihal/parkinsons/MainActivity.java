@@ -88,13 +88,22 @@ public class MainActivity extends ActionBarActivity {
         return false;
     }
 
-    public void startService(View view) {
+    public void startTremorService(View view) {
         startService(new Intent(this, TremorMonitor.class));
     }
 
     // Method to stop the service
-    public void stopService(View view) {
+    public void stopTremorService(View view) {
         stopService(new Intent(this, TremorMonitor.class));
+    }
+
+    public void startWalkService(View view) {
+        startService(new Intent(this, WalkService.class));
+    }
+
+    // Method to stop the service
+    public void stopWalkService(View view) {
+        stopService(new Intent(this, WalkService.class));
     }
 
 }

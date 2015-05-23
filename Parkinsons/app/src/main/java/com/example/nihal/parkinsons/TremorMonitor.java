@@ -70,6 +70,8 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     public boolean onUnbind(Intent intent) {
         return super.onUnbind(intent);
     }
+
+
     void  abhinavAPI(String id, String values){
     String timeStamp= "";
     

@@ -17,7 +17,7 @@
         android:layout_below="@+id/textView"
         android:layout_alignParentStart="true"
         android:layout_marginTop="52dp"
-        android:onClick="startService"/>
+        android:onClick="startTremorService"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -27,7 +27,27 @@
         android:layout_below="@+id/button1"
         android:layout_alignParentStart="true"
         android:layout_marginTop="54dp"
-        android:onClick="stopService"/>
+        android:onClick="stopTremorService"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Walk"
+        android:id="@+id/button3"
+        android:layout_marginTop="69dp"
+        android:layout_below="@+id/button2"
+        android:layout_alignParentStart="true"
+        android:onClick="startWalkService"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="STOP WALK"
+        android:id="@+id/button4"
+        android:layout_marginTop="44dp"
+        android:layout_below="@+id/button3"
+        android:layout_alignEnd="@+id/button3"
+        android:onClick="stopWalkService"/>
 
 
 </RelativeLayout>
