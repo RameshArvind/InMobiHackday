@@ -60,9 +60,8 @@ public class TremorMonitor extends Service  implements SensorEventListener2 {
     public void onDestroy() {
         super.onDestroy();
         startTime = System.currentTimeMillis() - startTime;
-
-        //abhinavAPI("7", "10,11,12,13");
         senSensorManager.unregisterListener(this);
+        abhinavAPI("1", ""+calcFrequency());
         Log.d("Average Frequency", ""+calcFrequency());
     }
 

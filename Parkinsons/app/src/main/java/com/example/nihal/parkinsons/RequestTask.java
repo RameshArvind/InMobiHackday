@@ -1,6 +1,7 @@
 package com.example.nihal.parkinsons;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -45,5 +46,6 @@ public class RequestTask extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
         //Do anything with response..
+        Log.d("AbhinavApi", "Sent!");
     }
 }
